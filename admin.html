@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Student Management</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-content">
+            <img class="header-logo header-logo-left" src="./assets/pasi-city-college-logo.png" alt="Passi City College seal">
+            <div class="header-copy">
+                <span class="eyebrow">Admin portal</span>
+                <h1>Student <span>Management System</span></h1>
+                <p class="header-tagline">Your academic journey, connected.</p>
+            </div>
+            <img class="header-logo header-logo-right" src="./assets/ict-logo.png" alt="School of Information and Communication Technology seal">
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card-panel" id="adminSection">
+            <h2>Admin Access</h2>
+            <p class="note">This page is for admin login only.</p>
+            <form id="adminLoginForm" class="form-panel" onsubmit="adminLogin(event)">
+                <label>Username<input type="text" id="adminUsername" required value="admin"></label>
+                <label>Password<input type="password" id="adminPassword" required></label>
+                <button type="submit">Login</button>
+                <p class="note">Demo admin credentials: <strong>admin / admin123</strong></p>
+            </form>
+        </div>
+
+        <div id="adminView" class="hidden dashboard-shell">
+            <nav class="admin-navigation" aria-label="Admin navigation">
+                <div class="admin-nav-links">
+                    <a href="#" class="nav-link active" data-admin-nav="dashboard">Dashboard</a>
+                    <a href="#" class="nav-link" data-admin-nav="teachers">Teachers</a>
+                    <a href="#" class="nav-link" data-admin-nav="students">Students</a>
+                    <a href="#" class="nav-link" data-admin-nav="registrations">Registrations</a>
+                </div>
+                <button class="secondary admin-logout" onclick="logout()">Logout</button>
+            </nav>
+
+            <main class="dashboard-main">
+                <header class="dashboard-topbar">
+                    <div>
+                        <p class="eyebrow eyebrow-small">Operations</p>
+                        <h2>Admin Dashboard</h2>
+                    </div>
+                    <div class="topbar-meta">
+                        <span class="status-pill">System online</span>
+                    </div>
+                </header>
+
+                <section class="stats-grid admin-panel-section" data-admin-section="dashboard">
+                    <div class="stat-card">
+                        <span>Total Students</span>
+                        <strong id="adminTotalStudentsValue">0</strong>
+                        <small id="adminTotalStudentsMeta">0 this month</small>
+                    </div>
+                    <div class="stat-card accent">
+                        <span>Pending</span>
+                        <strong id="adminPendingValue">0</strong>
+                        <small id="adminPendingMeta">Awaiting review</small>
+                    </div>
+                    <div class="stat-card">
+                        <span>Teachers</span>
+                        <strong id="adminTeachersValue">0</strong>
+                        <small id="adminTeachersMeta">Across 0 subjects</small>
+                    </div>
+                </section>
+
+                <div class="dashboard-panels">
+                    <div class="card-panel form-panel admin-panel-section" data-admin-section="teachers">
+                        <h3>Create Teacher Account</h3>
+                        <form id="teacherCreateForm" onsubmit="createTeacher(event)">
+                            <label>Username<input type="text" id="newTeacherUsername" required minlength="3"></label>
+                            <label>Password<input type="password" id="newTeacherPassword" required minlength="6"></label>
+                            <label>Assigned Subjects<input type="text" id="newTeacherSubject" required placeholder="e.g. Mathematics, English"></label>
+                            <button type="submit">Create Teacher</button>
+                        </form>
+                        <div id="teacherAccounts"></div>
+                        <form id="teacherEditForm" class="hidden" onsubmit="updateTeacher(event)">
+                            <h4>Edit Teacher Account</h4>
+                            <input type="hidden" id="editTeacherId">
+                            <label>Username<input type="text" id="editTeacherUsername" required minlength="3"></label>
+                            <label>New Password<input type="password" id="editTeacherPassword" minlength="6" placeholder="Leave blank to keep current password"></label>
+                            <label>Assigned Subjects<input type="text" id="editTeacherSubjects" required placeholder="e.g. Mathematics, English"></label>
+                            <button type="submit">Save Teacher</button>
+                            <button type="button" class="secondary" onclick="cancelTeacherEdit()">Cancel</button>
+                        </form>
+                    </div>
+
+                    <div class="card-panel form-panel admin-panel-section" data-admin-section="registrations">
+                        <h3>Pending Student Registrations</h3>
+                        <div id="pendingRegistrations"></div>
+                    </div>
+
+                    <div class="card-panel form-panel admin-panel-section" data-admin-section="students">
+                        <label class="search-label">Search Student
+                            <input type="search" id="adminSearch" placeholder="Search by name, email, or ID" oninput="handleAdminSearch(event)">
+                        </label>
+                        <div id="allStudents"></div>
+                    </div>
+
+                    <div id="adminEditPanel" class="hidden card-panel form-panel">
+                        <h3>Edit Student Record</h3>
+                        <form id="adminEditForm" onsubmit="updateStudentFromAdmin(event)">
+                            <input type="hidden" id="editStudentId">
+                            <label>First Name<input type="text" id="editFirstName" required></label>
+                            <label>Last Name<input type="text" id="editLastName" required></label>
+                            <label>Email<input type="email" id="editEmail" required></label>
+                            <label>Password<input type="password" id="editPassword" required minlength="6"></label>
+                            <label>GWA<input type="number" id="editGwa" step="0.01" min="0" max="100" readonly required></label>
+                            <label>Postal Code<input type="text" id="editPostalCode" required></label>
+                            <label>City<input type="text" id="editCity" required></label>
+                            <label>Province<input type="text" id="editProvince" required></label>
+                            <label>Birthday<input type="date" id="editBirthday" required></label>
+                            <label>Age<input type="number" id="editAge" min="15" max="100" required></label>
+                            <label>Sex
+                                <select id="editSex" required>
+                                    <option value="">Select sex</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </label>
+                            <label>Year Level
+                                <select id="editYearLevel" required>
+                                    <option value="">Select year</option>
+                                    <option value="1st Year">1st Year</option>
+                                    <option value="2nd Year">2nd Year</option>
+                                    <option value="3rd Year">3rd Year</option>
+                                    <option value="4th Year">4th Year</option>
+                                </select>
+                            </label>
+                            <div id="editStudentIdField" class="hidden">
+                                <label>Student ID Number<input type="text" id="editStudentIdNumber" maxlength="50"></label>
+                            </div>
+                            <div id="editBackSubjectsField" class="hidden">
+                                <label>Back Subjects (one subject per line)
+                                    <textarea id="editBackSubjects" rows="4" maxlength="2000" placeholder="Enter any subjects the student needs to retake"></textarea>
+                                </label>
+                            </div>
+                            <label>Course
+                                <select id="editCourse" required>
+                                    <option value="BSIT">BSIT</option>
+                                </select>
+                            </label>
+                            <label>Semester
+                                <select id="editSemester">
+                                    <option value="1st Semester">1st Semester</option>
+                                    <option value="2nd Semester">2nd Semester</option>
+                                </select>
+                            </label>
+                            <label>Semester GWA<input type="number" id="editSemesterGwa" step="0.01" min="0" max="100" readonly></label>
+                            <fieldset class="subjects-fieldset">
+                                <legend>Subjects & Grades - Check Lock after enrollment is confirmed</legend>
+                                <div class="subjects-grid">
+                                    <div class="subject-pair"><input type="text" id="editSubject1" placeholder="Subject 1"><input type="text" id="editGrade1" placeholder="Grade 1"><label><input type="checkbox" id="editLock1"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject2" placeholder="Subject 2"><input type="text" id="editGrade2" placeholder="Grade 2"><label><input type="checkbox" id="editLock2"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject3" placeholder="Subject 3"><input type="text" id="editGrade3" placeholder="Grade 3"><label><input type="checkbox" id="editLock3"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject4" placeholder="Subject 4"><input type="text" id="editGrade4" placeholder="Grade 4"><label><input type="checkbox" id="editLock4"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject5" placeholder="Subject 5"><input type="text" id="editGrade5" placeholder="Grade 5"><label><input type="checkbox" id="editLock5"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject6" placeholder="Subject 6"><input type="text" id="editGrade6" placeholder="Grade 6"><label><input type="checkbox" id="editLock6"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject7" placeholder="Subject 7"><input type="text" id="editGrade7" placeholder="Grade 7"><label><input type="checkbox" id="editLock7"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject8" placeholder="Subject 8"><input type="text" id="editGrade8" placeholder="Grade 8"><label><input type="checkbox" id="editLock8"> Lock</label></div>
+                                    <div class="subject-pair"><input type="text" id="editSubject9" placeholder="Subject 9"><input type="text" id="editGrade9" placeholder="Grade 9"><label><input type="checkbox" id="editLock9"> Lock</label></div>
+                                </div>
+                            </fieldset>
+                            <button type="submit">Save Student</button>
+                            <button type="button" class="secondary" onclick="cancelAdminEdit()">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="message" class="message hidden"></div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>

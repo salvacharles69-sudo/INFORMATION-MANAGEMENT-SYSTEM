@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-content">
+            <img class="header-logo header-logo-left" src="./assets/pasi-city-college-logo.png" alt="Passi City College seal">
+            <div class="header-copy">
+                <span class="eyebrow">Campus portal</span>
+                <h1>Student <span>Management System</span></h1>
+                <p class="header-tagline">Your academic journey, connected.</p>
+            </div>
+            <img class="header-logo header-logo-right" src="./assets/ict-logo.png" alt="School of Information and Communication Technology seal">
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="studentSection" class="card-panel">
+            <h2>Student Access</h2>
+            <div class="form-tabs">
+                <button id="studentTabRegister" class="tab-button active" onclick="showStudentTab('register')">Register</button>
+                <button id="studentTabLogin" class="tab-button" onclick="showStudentTab('login')">Login</button>
+            </div>
+
+            <form id="studentRegisterForm" class="form-panel" onsubmit="registerStudent(event)">
+                <h3>Create Your Account</h3>
+                <label>First Name<input type="text" id="registerFirstName" required></label>
+                <label>Last Name<input type="text" id="registerLastName" required></label>
+                <label>Email<input type="email" id="registerEmail" required></label>
+                <label>Password<input type="password" id="registerPassword" required minlength="6"></label>
+                <label>Postal Code<input type="text" id="registerPostalCode" required></label>
+                <label>City<input type="text" id="registerCity" required></label>
+                <label>Province<input type="text" id="registerProvince" required></label>
+                <label>Birthday<input type="date" id="registerBirthday" required></label>
+                <label>Age<input type="number" id="registerAge" min="15" max="100" required></label>
+                <label>Sex
+                    <select id="registerSex" required>
+                        <option value="">Select sex</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+                <label>Year Level
+                    <select id="registerYearLevel" required>
+                        <option value="">Select year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                    </select>
+                </label>
+                <div id="registerStudentIdField" class="hidden">
+                    <label>Student ID Number<input type="text" id="registerStudentIdNumber" maxlength="50"></label>
+                </div>
+                <label>Course
+                    <select id="registerCourse" required>
+                        <option value="BSIT">BSIT</option>
+                    </select>
+                </label>
+                <label>Semester
+                    <select id="registerSemester">
+                        <option value="1st Semester">1st Semester</option>
+                        <option value="2nd Semester">2nd Semester</option>
+                    </select>
+                </label>
+                <label>Semester GWA<input type="number" id="registerSemesterGwa" step="0.01" min="1" max="5"></label>
+                <fieldset class="subjects-fieldset">
+                    <legend>Available Subjects</legend>
+                    <div class="subjects-grid">
+                        <input type="text" id="registerSubject1" placeholder="Subject 1" readonly>
+                        <input type="text" id="registerSubject2" placeholder="Subject 2" readonly>
+                        <input type="text" id="registerSubject3" placeholder="Subject 3" readonly>
+                        <input type="text" id="registerSubject4" placeholder="Subject 4" readonly>
+                        <input type="text" id="registerSubject5" placeholder="Subject 5" readonly>
+                        <input type="text" id="registerSubject6" placeholder="Subject 6" readonly>
+                        <input type="text" id="registerSubject7" placeholder="Subject 7" readonly>
+                        <input type="text" id="registerSubject8" placeholder="Subject 8" readonly>
+                        <input type="text" id="registerSubject9" placeholder="Subject 9" readonly>
+                    </div>
+                </fieldset>
+                <button type="submit">Register</button>
+                <p class="note">After registration, your account appears in the admin dashboard.</p>
+            </form>
+
+            <form id="studentLoginForm" class="form-panel hidden" onsubmit="studentLogin(event)">
+                <h3>Student Login</h3>
+                <label>Email or Student ID Number<input type="text" id="loginEmail" autocomplete="username" required></label>
+                <label>Password<input type="password" id="loginPassword" required></label>
+                <button id="studentLoginButton" type="submit">Login</button>
+            </form>
+        </div>
+
+        <div id="studentView" class="hidden card-panel">
+            <div class="view-header">
+                <h2>Student Dashboard</h2>
+                <button class="secondary" onclick="logout()">Logout</button>
+            </div>
+            <div id="studentData"></div>
+            <form id="studentProfileForm" class="form-panel" onsubmit="updateStudentProfile(event)">
+                <h3>Update Your Profile</h3>
+                <label>First Name<input type="text" id="profileFirstName" required></label>
+                <label>Last Name<input type="text" id="profileLastName" required></label>
+                <label>Email<input type="email" id="profileEmail" required></label>
+                <label>Password<input type="password" id="profilePassword" required minlength="6"></label>
+                <label>Postal Code<input type="text" id="profilePostalCode" required></label>
+                <label>City<input type="text" id="profileCity" required></label>
+                <label>Province<input type="text" id="profileProvince" required></label>
+                <label>Birthday<input type="date" id="profileBirthday" required></label>
+                <label>Age<input type="number" id="profileAge" min="15" max="100" required></label>
+                <label>Sex
+                    <select id="profileSex" required>
+                        <option value="">Select sex</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+                <label>Year Level
+                    <select id="profileYearLevel" required>
+                        <option value="">Select year</option>
+                        <option value="1st Year">1st Year</option>
+                        <option value="2nd Year">2nd Year</option>
+                        <option value="3rd Year">3rd Year</option>
+                        <option value="4th Year">4th Year</option>
+                    </select>
+                </label>
+                <div id="profileStudentIdField" class="hidden">
+                    <label>Student ID Number<input type="text" id="profileStudentIdNumber" maxlength="50"></label>
+                </div>
+                <div id="profileBackSubjectsField" class="hidden">
+                    <label>Back Subjects (one subject per line)
+                        <textarea id="profileBackSubjects" rows="4" maxlength="2000" placeholder="Enter any subjects you need to retake"></textarea>
+                    </label>
+                </div>
+                <label>Course
+                    <select id="profileCourse" required>
+                        <option value="BSIT">BSIT</option>
+                    </select>
+                </label>
+                <label>Semester
+                    <select id="profileSemester">
+                        <option value="1st Semester">1st Semester</option>
+                        <option value="2nd Semester">2nd Semester</option>
+                    </select>
+                </label>
+                <label>Semester GWA<input type="number" id="profileSemesterGwa" step="0.01" min="1" max="5"></label>
+                <fieldset class="subjects-fieldset">
+                    <legend>Your Subjects</legend>
+                    <div class="subjects-grid">
+                        <input type="text" id="profileSubject1" placeholder="Subject 1" readonly>
+                        <input type="text" id="profileSubject2" placeholder="Subject 2" readonly>
+                        <input type="text" id="profileSubject3" placeholder="Subject 3" readonly>
+                        <input type="text" id="profileSubject4" placeholder="Subject 4" readonly>
+                        <input type="text" id="profileSubject5" placeholder="Subject 5" readonly>
+                        <input type="text" id="profileSubject6" placeholder="Subject 6" readonly>
+                        <input type="text" id="profileSubject7" placeholder="Subject 7" readonly>
+                        <input type="text" id="profileSubject8" placeholder="Subject 8" readonly>
+                        <input type="text" id="profileSubject9" placeholder="Subject 9" readonly>
+                    </div>
+                </fieldset>
+                <button type="submit">Save Changes</button>
+            </form>
+        </div>
+
+        <div id="message" class="message hidden"></div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>

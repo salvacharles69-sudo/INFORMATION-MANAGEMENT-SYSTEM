@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Portal - Student Management</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-content">
+            <img class="header-logo header-logo-left" src="./assets/pasi-city-college-logo.png" alt="Passi City College seal">
+            <div class="header-copy">
+                <span class="eyebrow">Teacher portal</span>
+                <h1>Student <span>Management System</span></h1>
+                <p class="header-tagline">Your academic journey, connected.</p>
+            </div>
+            <img class="header-logo header-logo-right" src="./assets/ict-logo.png" alt="School of Information and Communication Technology seal">
+        </div>
+    </header>
+    <div class="container">
+        <div class="card-panel" id="teacherSection">
+            <h2>Teacher Access</h2>
+            <p class="note">Log in to manage grades for your assigned subject.</p>
+            <form class="form-panel" onsubmit="teacherLogin(event)">
+                <label>Username<input type="text" id="teacherUsername" required value="teacher"></label>
+                <label>Password<input type="password" id="teacherPassword" required></label>
+                <button type="submit">Login</button>
+                <p class="note">Demo teacher credentials: <strong>teacher / teacher123</strong></p>
+            </form>
+        </div>
+
+        <div id="teacherView" class="hidden card-panel">
+            <div class="view-header">
+                <div><h2>Teacher Dashboard</h2><p class="note">Assigned subject: <strong id="teacherSubject"></strong></p></div>
+                <button class="secondary" onclick="logout()">Logout</button>
+            </div>
+            <label class="search-label">Search Student
+                <input type="search" id="teacherSearch" placeholder="Search by name or ID" oninput="handleTeacherSearch(event)">
+            </label>
+            <div id="teacherStudents"></div>
+        </div>
+        <div id="message" class="message hidden"></div>
+    </div>
+    <script src="./script.js"></script>
+</body>
+</html>
